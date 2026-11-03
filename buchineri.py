@@ -168,7 +168,7 @@ def kerr(M,a,r0,th0,FOV,N):
     foc=(N/2)/np.tan(FOV/2)   #focal length
     x=np.linspace(-(N-1)/2, (N-1)/2, N)# coordinate of the screen
     y=np.linspace(-(N-1)/2, (N-1)/2, N)
-    X, Y=np.meshgrid(x,y) # cartesian grid 
+    X, Y=np.meshgrid(-x,-y) # cartesian grid 
     alpha_pixel=np.arctan(np.sqrt(X**2+Y**2)/foc) # map of angles alpha
     psi_pixel=np.arctan2(Y,X) # map of angles psi
     ###############
