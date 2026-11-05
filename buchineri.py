@@ -39,6 +39,7 @@ def integratore_schwarzschild(b,r0,M):
         events=[evento_fuga, evento_orizzonte],
         rtol=1e-13, 
         atol=1e-13,
+        dense_output=True,
         method='DOP853') # grat accuracy, high order method, ideal for smooth problems like this one
 
     catturato = sol.t_events[1].size > 0 # its True if event 1 (falling into the horizon) occurred
@@ -115,7 +116,7 @@ def integratore_kerr(b,Q,r0,th0,signdotth0,M,a):
 #################################
 
 ### SCHWARZSCHILD ###
-def schwarzshild(M,r0,FOV,N):
+def schwarzschild(M,r0,FOV,N):
     # input:  Mass of the black hole, distance from the black hole, field of view, number of pixels per side of the image
     # output: deflection table for each pixel, black hole shadow mask
 
