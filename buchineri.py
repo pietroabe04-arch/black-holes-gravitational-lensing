@@ -92,7 +92,6 @@ def integratore_kerr(b,Q,r0,th0,signdotth0,M,a):
         return  M+np.sqrt(M**2-a**2) - y[0]+ 1e-6 # small offset to avoid numerical issues
     evento_orizzonte.terminal = True
     evento_orizzonte.direction = 1 # moving towards the horizon (r decreasing r_+ - r increasing)
-
     # integration span in affine parameter tau, time of Mino
     tau_span = (0, 10000)                     
 
@@ -210,7 +209,7 @@ def cielo(sky, nx,ny,nz):
     row = np.clip((lat / np.pi * H).astype(int), 0, H - 1) # clip to ensure indices are within bounds
     return sky[row, col]
 
-def immagine(name_file,phi_pixel,black,FOV,N, th_pixel=None):
+def immagine(name_file,phi_pixel,black,FOV,N,th0=None, th_pixel=None):
     # input:  name of the sky image, deflection table for each pixel, black hole shadow mask, field of view, number of pixels per side of the image, theta angle for Kerr case (optional)
     # output: two images, one with the black hole and one without
     foc=(N/2)/np.tan(FOV/2) 
@@ -221,17 +220,28 @@ def immagine(name_file,phi_pixel,black,FOV,N, th_pixel=None):
     alpha_pixel=np.arctan(d_pixel/foc)          # map of the alpha angle
     phi_vuoto_pixel=np.pi-alpha_pixel           # map of the deflection in the void
 
-    # vector field of asymptotic directions in the void (nx,ny,nz)
-    nx_vuoto_pixel = np.cos(phi_vuoto_pixel)
-    ny_vuoto_pixel = np.sin(phi_vuoto_pixel) * X/d_pixel
-    nz_vuoto_pixel = np.sin(phi_vuoto_pixel) * Y/d_pixel
-
     if(th_pixel is None): # Schwarzschild case
+        # vector field of asymptotic directions in the void (nx,ny,nz)
+        nx_vuoto_pixel = np.cos(phi_vuoto_pixel)
+        ny_vuoto_pixel = np.sin(phi_vuoto_pixel) * X/d_pixel
+        nz_vuoto_pixel = np.sin(phi_vuoto_pixel) * Y/d_pixel
+
         # vector field of asymptotic directions (nx,ny,nz)
         nx_pixel = np.cos(phi_pixel)
         ny_pixel = np.sin(phi_pixel) * X/d_pixel
         nz_pixel = np.sin(phi_pixel) * Y/d_pixel
     else: # Kerr case
+        # vector field of asymptotic directions in the void (nx,ny,nz):
+
+        e_r  = (np.sin(th0), 0.0, np.cos(th0))   # radial unit vector at the observer
+        e_th = (np.cos(th0), 0.0, -np.sin(th0))  # polar unit vector at the observer
+        c_r   = -np.cos(alpha_pixel)
+        c_phi = np.sin(alpha_pixel)*X/d_pixel
+        c_th  = np.sin(alpha_pixel)*Y/d_pixel
+        nx_vuoto_pixel = c_r*e_r[0] + c_th*e_th[0]
+        ny_vuoto_pixel = c_phi                      # e_phi = (0,1,0)
+        nz_vuoto_pixel = c_r*e_r[2] + c_th*e_th[2]
+
         # vector field of asymptotic directions (nx,ny,nz)
         nx_pixel = np.cos(phi_pixel)*np.sin(th_pixel)
         ny_pixel = np.sin(phi_pixel)*np.sin(th_pixel)
@@ -249,7 +259,6 @@ def immagine(name_file,phi_pixel,black,FOV,N, th_pixel=None):
         ax.imshow(img, origin='lower')
         ax.set_title(titolo)
         ax.axis('off')
-    plt.tight_layout()
     plt.show()
 
     # return the two images 

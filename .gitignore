@@ -1,6 +1,14 @@
+# Ignora tutto...
+/*
+
+# ...tranne questi
+!.gitignore
+!README.md
+!buchineri.py
+!immaginibuchineri.ipynb
+!datikerr/
+
+# file di sistema anche dentro le cartelle tenute
 .DS_Store
 .ipynb_checkpoints/
 __pycache__/
-*.npz
-*.png
-!img/*.png
