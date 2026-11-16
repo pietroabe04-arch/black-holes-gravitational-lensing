@@ -31,13 +31,22 @@ Kerr black hole ($N=1000$, $FOV=70°$, $r_0=30M$, $\theta_0=\pi/2$, $a=0.99$):
 | `buchineri.py` | geodesic integrators, camera screen setup, image rendering functions |
 | `immaginibuchineri.ipynb` | notebook that sets the parameters, generates the images and check the quality of the integration|
 
+The notebook works with four folders, which it creates automatically if they are missing:
+
+| Folder | Contents | In the repository |
+|---|---|---|
+| `datikerr/` | Kerr ray-tracing results saved as `.npz` (deflection angles `phi_pixel_kerr`, `th_pixel` and shadow mask `black_kerr`), named `kerr_data_{M}_{a}_{r0}_{θ0}°_{FOV}°_{N}.npz`. They can be reloaded to render new images without repeating the slow integration | yes |
+| `sfondi/` | equirectangular background sky images used as input | no (size and licensing) |
+| `immagini/` | rendered images, in the subfolders `schwarzschild/` and `kerr/`, each with and without the black hole (`vuoto_...`) | no (size) |
+| `grafici/` | PDF plots for the thesis (trajectories, potential, quality checks) | no |
+
 ## Requirements
 
 Python 3 with `numpy`, `scipy`, `matplotlib` and `pillow`
 
 ## Usage
 
-1. Download an equirectangular sky image (for example a Milky Way panorama or a a checkered background) and place it in the project folder. Background images are **not included** in the repository because of their size and licensing.
+1. Download an equirectangular sky image (for example a Milky Way panorama or a a checkered background) and place it in the `sfondi/` folder. Background images are **not included** in the repository because of their size and licensing.
 2. Open `immaginibuchineri.ipynb`, set the file name and the parameters (mass $M$, spin $a$, observer distance $r_0$, field of view, resolution $N$), then run the cells.
 
 **Notes:**
